@@ -30,4 +30,25 @@ const getCryptoPrices = async () => {
     }
 };
 
-module.exports = { getCryptoPrices };
+const getStats = async (req, res) => {
+    const { coin } = req.params;
+
+    try {
+        const cryptoData = await Crypto.findOne({ coin }).sort({ _id: -1 }).limit(1);
+
+        if (!cryptoData) {
+            return res.status(404).json({ error: "No data found for this coin." });
+        }
+
+        // returning the relevant data
+        res.json({
+            price: cryptoData.price,
+            marketCap: cryptoData.marketCap,
+            "24Change": cryptoData["24hChange"],
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching stats: " + error.message });
+    }
+}
+
+module.exports = { getCryptoPrices, getStats };
