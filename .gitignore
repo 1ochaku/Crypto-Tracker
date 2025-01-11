@@ -1,8 +1,5 @@
 # Node modules directory
 node_modules/
 
-# Lock file
-package-lock.json
-
 # Environment variables
 .env
