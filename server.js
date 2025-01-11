@@ -17,7 +17,7 @@ connectDB();
 app.use("/api", cryptoRoutes);
 
 // background job that fetches data every 2 hours
-cron.schedule("*/2 * * * *", async () => {
+cron.schedule("0 */2 * * *", async () => { //make changes here to fetch how frequently to retrieve data
     console.log("Running scheduled job: Fetching crypto data...");
     try {
         await cryptoController.getCryptoPrices();  // Calling the controller to fetch data
