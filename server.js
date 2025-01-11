@@ -1,7 +1,9 @@
 // importing required modules
 const express = require("express");
-const axios = require("axios");
 const dotenv = require("dotenv");
+const cron = require("node-cron");
+const cryptoController = require("./controllers/cryptoController");
+const cryptoRoutes = require("./routes/cryptoRoutes");
 
 // loading environment variables from .env file
 dotenv.config();
@@ -9,27 +11,11 @@ dotenv.config();
 // initialising the express application
 const app = express();
 
-// testing route to fetch the data
-app.get("/api/crypto-price", async (req, res) => {
-    try {
-        const response = await axios.get(`${process.env.COINGECKO_API}/simple/price`, {
-            params: {
-                ids: "bitcoin,matic-network,ethereum",
-                vs_currencies: "usd",
-                include_market_cap: true,
-                include_24hr_change: true,
-            },
-        });
-        console.log(response.data);
-        res.json(response.data);
-    } catch (error) {
-        // logging the error message to the console
-        console.error("Error fetching data from CoinGecko:", error.message);
-
-        // sending a 500 status code with an error message to the client
-        res.status(500).json({ error: "Failed to fetch crypto data" });
-    }
-})
+// background job that fetches data every 2 hours
+cron.schedule("*/2 * * * *", async () => {
+    console.log("Running scheduled job: Fetching crypto data...");
+    await cryptoController.getCryptoPrices(); // need to work on this as req parameters not defined
+});
 
 const PORT = process.env.PORT || 5000;
 
