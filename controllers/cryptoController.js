@@ -1,6 +1,9 @@
 const axios = require("axios");
 const Crypto = require("../models/cryptoData");
+const math = require("mathjs");
 
+// gets the cryptoprices for 3 coins and store in db
+// coins are: bitcoin, ethereum, matic-network
 const getCryptoPrices = async () => {
     // console.log("Running scheduled job: Fetching crypto data...");
     try {
@@ -30,6 +33,7 @@ const getCryptoPrices = async () => {
     }
 };
 
+// gets the latest data for the entered coin
 const getStats = async (req, res) => {
     const { coin } = req.params;
 
@@ -51,4 +55,31 @@ const getStats = async (req, res) => {
     }
 }
 
-module.exports = { getCryptoPrices, getStats };
+// gets the std deviation for the queried coin
+const getStdDeviation = async (req, res) => {
+    const { coin } = req.params;
+    
+    try {
+        const data = await Crypto.find({ coin }).sort({_id:-1}).limit(100);
+        // console.log(data);
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({ error: "No data found for this coin." });
+        }
+
+        if (data.length < 2) {
+            return res.status(400).json({ error: "Not enough data to calculate standard deviation." });
+        }
+
+        const values = data.map(entry => entry.price);
+        const stdDeviation = math.std(values);  // Using the library function
+
+        res.json({ standardDeviation: stdDeviation.toFixed(2) });
+
+        // res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Error computing the standard deviation: " + error.message });
+    }
+}
+
+module.exports = { getCryptoPrices, getStats, getStdDeviation };

@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 connectDB();
 
+// routes for all the apis
 app.use("/api", cryptoRoutes);
 
 // background job that fetches data every 2 hours
