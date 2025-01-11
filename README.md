@@ -1,6 +1,3 @@
-Here's the complete README.md code ready for copying:
-
-````markdown
 # Crypto Statistics Server
 
 A server-side application built using Node.js, Express, and MongoDB that provides real-time cryptocurrency statistics by leveraging the CoinGecko API. This application tracks real-time data for Bitcoin, Matic-Network, and Ethereum.
@@ -32,7 +29,6 @@ A server-side application built using Node.js, Express, and MongoDB that provide
 git clone https://github.com/1ochaku/Crypto-Tracker.git
 cd Crypto-Tracker
 ```
-````
 
 2. Install dependencies:
 
